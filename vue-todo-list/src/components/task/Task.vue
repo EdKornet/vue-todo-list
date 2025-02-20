@@ -1,33 +1,55 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import TaskList from "@/components/task/TaskList.vue";
+import {computed, ref} from "vue";
 import TaskInput from "@/components/task/TaskInput.vue";
+import TaskList from "@/components/task/TaskList.vue";
 import TaskPending from "@/components/task/TaskPending.vue";
 import Button from "@/components/Button.vue";
 
-const tasks = ref<string[]>([]);
+const tasks = ref<{ text: string; completed: boolean }[]>([]);
 
-function handleNewTask(task: string) {
-  tasks.value.push(task);
-  console.log(tasks.value)
+function handleNewTask(newTask: { text: string; completed: boolean }) {
+  tasks.value.push(newTask);
 }
+
+function toggleCompleted(taskIndex: number) {
+  tasks.value[taskIndex].completed = !tasks.value[taskIndex].completed;
+}
+
+function deleteTask(taskIndex: number) {
+  tasks.value = tasks.value.filter((_, index) => index !== taskIndex);
+}
+
+function clearCompleted() {
+  tasks.value = tasks.value.filter(task => task.completed !== true)
+}
+
+function clearAll() {
+  tasks.value = [];
+}
+
+const countPendingTasks = computed(()=> {
+  return tasks.value.filter((task) => !task.completed).length;
+})
 </script>
 
 <template>
- <div class="container">
+  <div class="container">
     <div class="task">
       <h1>To Do List</h1>
       <TaskInput @add-task="handleNewTask"/>
-      <TaskList/>
-      <div class="btns-container">
-        <Button></Button>
-        <Button></Button>
+      <TaskList
+          :tasks="tasks"
+          @toggle-completed="toggleCompleted"
+          @remove="deleteTask"
+      />
+      <div class="clearBtns">
+        <Button @click="clearCompleted">Clear completed</Button>
+        <Button @click="clearAll">Clear all</Button>
       </div>
-      <TaskPending/>
+      <TaskPending :count="countPendingTasks"/>
     </div>
- </div>
+  </div>
 </template>
 
 <style scoped>
-
 </style>

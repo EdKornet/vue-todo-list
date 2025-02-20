@@ -1,9 +1,13 @@
 <script setup lang="ts">
+import {defineProps} from 'vue';
 
+defineProps<{ count: number }>();
 </script>
 
 <template>
-<p>task pending</p>
+  <div class="pendingTasks">
+    <span>Pending Tasks: {{ count }}</span>
+  </div>
 </template>
 
 <style scoped>
