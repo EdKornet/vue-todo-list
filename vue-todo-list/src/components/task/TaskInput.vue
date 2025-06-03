@@ -7,12 +7,18 @@ const newTask = ref<{ text: string; completed: boolean }>({
 });
 
 const emit = defineEmits<{
-  (event: "add-task", task: { text: string; completed: boolean }): void;
+  (event: "add-task", task: { id: number; text: string; completed: boolean }): void;
 }>();
 
 function addTaskHandler() {
   if (!newTask.value.text.trim()) return;
-  emit("add-task", { ...newTask.value });
+
+  emit("add-task", {
+    id: Date.now() + Math.random(),
+    ...newTask.value
+  });
+
+
   newTask.value.text = "";
 }
 </script>

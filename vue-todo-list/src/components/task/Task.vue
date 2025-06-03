@@ -1,13 +1,22 @@
 <script setup lang="ts">
-import {computed, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import TaskInput from "@/components/task/TaskInput.vue";
 import TaskList from "@/components/task/TaskList.vue";
 import TaskPending from "@/components/task/TaskPending.vue";
 import Button from "@/components/Button.vue";
 
-const tasks = ref<{ text: string; completed: boolean }[]>([]);
+const tasks = ref<{
+  id: number;
+  text: string;
+  completed: boolean }[]>([]);
 
-function handleNewTask(newTask: { text: string; completed: boolean }) {
+onMounted(async ()=> {
+
+})
+
+
+
+function handleNewTask(newTask: { id:number, text: string; completed: boolean }) {
   tasks.value.push(newTask);
 }
 
