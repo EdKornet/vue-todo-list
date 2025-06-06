@@ -10,7 +10,7 @@ defineProps<{
 
 const emit = defineEmits<{
   (event: "toggle-completed", index: number): void;
-  (event: "remove", index: number): void;
+  (event: "remove", id: number): void;
 
 }>();
 </script>
@@ -22,8 +22,8 @@ const emit = defineEmits<{
           v-for="(task, index) in tasks"
           :key="task.id"
           :task="{text: task.title, completed: task.completed}"
-          @toggle-completed="emit('toggle-completed', index)"
-          @remove="emit('remove', index)"
+          @toggle-completed="emit('toggle-completed', task.id)"
+          @remove="emit('remove', task.id)"
       />
     </ul>
   </div>

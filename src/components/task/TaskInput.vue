@@ -1,36 +1,54 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import type { Task } from '@types/task.d.ts';
+import { computed, defineEmits } from 'vue';
+import type { Task } from '@/types/task';
 
-const newTaskTitle = ref('');
-
-const emit = defineEmits<{
-  (event: "add-task", task: Omit<Task, 'id'>): void;
+const props = defineProps<{
+  task: Task;
 }>();
 
-function addTaskHandler() {
-  const title = newTaskTitle.value.trim();
-  if (!title) return;
+const emit = defineEmits<{
+  (event: "toggle-completed", payload: { id: string; completed: boolean }): void;
+  (event: "remove", id: string): void;
+}>();
 
-  emit("add-task", {
-    title: title,
-    completed: false
+const toggleClass = computed(() => {
+  return props.task.completed ? "toggle toggle-completed" : "toggle";
+});
+
+function onToggleCompleted() {
+  emit("toggle-completed", {
+    id: props.task.id,
+    completed: !props.task.completed,
   });
+}
 
-  newTaskTitle.value = "";
+function onRemove() {
+  emit("remove", props.task.id);
 }
 </script>
 
 <template>
-  <div class="form">
-    <input
-        v-model="newTaskTitle"
-        @keyup.enter="addTaskHandler"
-        type="text"
-        placeholder="New Task"
-    />
-    <button @click="addTaskHandler">
-      <i class="fas fa-plus"></i>
+  <li>
+    <button :class="toggleClass" @click="onToggleCompleted">
+      <i class="far fa-circle"></i> {{ props.task.text }}
     </button>
-  </div>
+    <button @click="onRemove">
+      <i class="far fa-trash-alt"></i>
+    </button>
+  </li>
 </template>
+
+<style scoped>
+.toggle {
+  padding: 0.5rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 1rem;
+}
+
+.toggle-completed {
+  text-decoration: line-through;
+  color: gray;
+}
+</style>

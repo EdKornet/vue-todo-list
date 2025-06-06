@@ -31,6 +31,11 @@ router.put("/todos/:id", async (req: Request, res: Response) => {
         const { id } = req.params;
         const { completed } = req.body;
         const updatedTodo = await Todo.findByIdAndUpdate(id, { completed }, { new: true });
+
+        if (!updatedTodo) {
+            return res.status(404).json({ message: "Задача не найдена" });
+        }
+
         res.json(updatedTodo);
     } catch (error) {
         res.status(500).json({ message: "Ошибка при обновлении" });

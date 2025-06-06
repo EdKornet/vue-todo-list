@@ -29,19 +29,19 @@ export class TodoService {
     }
 
     // Обновление статуса задачи
-    // public async updateTodo(id: string, completed: boolean): Promise<Task> {
-    //     const response = await fetch(`${this.apiUrl}/${id}`, {
-    //         method: "PUT",
-    //         headers: { "Content-Type": "application/json" },
-    //         body: JSON.stringify({ completed }),
-    //     });
-    //     return this.handleResponse(response);
-    // }
+    public async updateTodo(id: string, completed: boolean): Promise<Task> {
+        const response = await fetch(TodosAPI.edit(id), {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ completed }),
+        });
+        return this.handleResponse(response);
+    }
 
     // Удаление задачи
-    // public async deleteTodo(id: string): Promise<void> {
-    //     const response = await fetch(`${this.apiUrl}/${id}`, { method: "DELETE" });
-    //     if (!response.ok) throw new Error("Ошибка при удалении");
-    // }
+    public async deleteTodo(id: number): Promise<void> {
+        const response = await fetch(TodosAPI.delete(id), { method: "DELETE" });
+        return this.handleResponse(response);
+    }
 }
 

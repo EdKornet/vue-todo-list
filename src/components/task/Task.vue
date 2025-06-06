@@ -35,8 +35,13 @@ function toggleCompleted(taskIndex: number) {
   tasks.value[taskIndex].completed = !tasks.value[taskIndex].completed;
 }
 
-function deleteTask(taskIndex: number) {
-  tasks.value = tasks.value.filter((_, index) => index !== taskIndex);
+async function deleteTask(id: number) {
+  try {
+    await todoService.deleteTodo(id);
+    await getTasks();
+  } catch (error) {
+    console.error("Ошибка при удалении задачи:", error);
+  }
 }
 
 function clearCompleted() {
