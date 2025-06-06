@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import TaskItem from "@/components/task/TaskItem.vue";
+import { defineProps } from 'vue';
+import type {Task} from '@types/task.d.ts';
+
 
 defineProps<{
-  tasks: {id: number, text: string; completed: boolean }[]
+  tasks: Task[]
 }>();
 
 const emit = defineEmits<{
@@ -18,7 +21,7 @@ const emit = defineEmits<{
       <TaskItem
           v-for="(task, index) in tasks"
           :key="task.id"
-          :task="{text: task.text, completed: task.completed}"
+          :task="{text: task.title, completed: task.completed}"
           @toggle-completed="emit('toggle-completed', index)"
           @remove="emit('remove', index)"
       />

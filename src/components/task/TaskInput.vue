@@ -1,32 +1,30 @@
 <script setup lang="ts">
-import { ref, defineEmits } from 'vue';
+import { ref } from 'vue';
+import type { Task } from '@types/task.d.ts';
 
-const newTask = ref<{ text: string; completed: boolean }>({
-  text: "",
-  completed: false,
-});
+const newTaskTitle = ref('');
 
 const emit = defineEmits<{
-  (event: "add-task", task: { id: number; text: string; completed: boolean }): void;
+  (event: "add-task", task: Omit<Task, 'id'>): void;
 }>();
 
 function addTaskHandler() {
-  if (!newTask.value.text.trim()) return;
+  const title = newTaskTitle.value.trim();
+  if (!title) return;
 
   emit("add-task", {
-    id: Date.now() + Math.random(),
-    ...newTask.value
+    title: title,
+    completed: false
   });
 
-
-  newTask.value.text = "";
+  newTaskTitle.value = "";
 }
 </script>
 
 <template>
   <div class="form">
     <input
-        v-model="newTask.text"
+        v-model="newTaskTitle"
         @keyup.enter="addTaskHandler"
         type="text"
         placeholder="New Task"
@@ -36,6 +34,3 @@ function addTaskHandler() {
     </button>
   </div>
 </template>
-
-<style scoped>
-</style>

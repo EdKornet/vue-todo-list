@@ -1,11 +1,12 @@
 import express, { Request, Response } from "express";
-import Todo, { ITodo } from "../models/Todo";
+import Todo from "../models/Todo";
+import type {Task} from '../../../types/Task';
 
 const router = express.Router();
 
 router.get("/todos", async (req: Request, res: Response) => {
     try {
-        const todos: ITodo[] = await Todo.find();
+        const todos: Task[] = await Todo.find();
         res.json(todos);
     } catch (error) {
         res.status(500).json({ message: "Ошибка сервера" });
@@ -14,9 +15,11 @@ router.get("/todos", async (req: Request, res: Response) => {
 
 router.post("/todos", async (req: Request, res: Response) => {
     try {
-        const { title } = req.body;
-        const newTodo = new Todo({ title });
+        const { title, completed } = req.body;
+
+        const newTodo = new Todo({ title, completed });
         await newTodo.save();
+
         res.json(newTodo);
     } catch (error) {
         res.status(500).json({ message: "Ошибка при создании задачи" });

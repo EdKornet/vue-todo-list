@@ -4,20 +4,31 @@ import TaskInput from "@/components/task/TaskInput.vue";
 import TaskList from "@/components/task/TaskList.vue";
 import TaskPending from "@/components/task/TaskPending.vue";
 import Button from "@/components/Button.vue";
+import {TodoService} from "@/services/TodoService"
+import type {Task} from '@types/task.d.ts';
 
-const tasks = ref<{
-  id: number;
-  text: string;
-  completed: boolean }[]>([]);
 
-onMounted(async ()=> {
-
+const tasks = ref<Task[]>([]);
+const todoService = new TodoService();
+onMounted(async () => {
+ await getTasks();
 })
 
+async function getTasks() {
+  try {
+    tasks.value = await todoService.getTodos();
+  } catch (error) {
+    console.error("Ошибка при получении задач:", error);
+  }
+}
 
-
-function handleNewTask(newTask: { id:number, text: string; completed: boolean }) {
-  tasks.value.push(newTask);
+async function handleNewTask(taskData:Omit<Task, 'id'>) {
+  try {
+    await todoService.addTodo(taskData);
+    await getTasks();
+  } catch (error) {
+    console.error("Ошибка при криэшене задачи:", error);
+  }
 }
 
 function toggleCompleted(taskIndex: number) {
@@ -36,7 +47,7 @@ function clearAll() {
   tasks.value = [];
 }
 
-const countPendingTasks = computed(()=> {
+const countPendingTasks = computed(() => {
   return tasks.value.filter((task) => !task.completed).length;
 })
 </script>

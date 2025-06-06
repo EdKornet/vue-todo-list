@@ -1,13 +1,18 @@
 import mongoose, { Document, Schema } from "mongoose";
+import type {Task} from '../../../types/Task';
 
-export interface ITodo extends Document {
-    title: string;
-    completed: boolean;
-}
 
 const TodoSchema: Schema = new Schema({
     title: { type: String, required: true },
-    completed: { type: Boolean, default: false },
+    completed: { type: Boolean, default: false }
 });
 
-export default mongoose.model<ITodo>("Todo", TodoSchema);
+TodoSchema.set("toJSON", {
+    versionKey: false,
+    transform: (_doc, ret) => {
+        ret.id = ret._id.toString();
+        delete ret._id;
+    }
+});
+
+export default mongoose.model<Task>("Todo", TodoSchema);
